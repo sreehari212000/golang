@@ -31,6 +31,7 @@ var arr = []int{1,2,3}
 ## Taking input from users
 There are multiple ways to take input from users
 1. If you know what type of input will be provided by user. 
+
 using Scanln
 ```go
 package main
