@@ -166,3 +166,157 @@ Output
 Value of x: 10
 
 ```
+## *panic* Keyword
+```panic``` is used in Go to stop normal execution immediately when something goes terribly wrong (like a runtime error or an unrecoverable situation).
+
+Think of it as throwing an error in Node.js.
+```go
+package main
+
+import "fmt"
+
+func riskyDivision(a, b int) int {
+    if b == 0 {
+        panic("division by zero")
+    }
+    return a / b
+}
+
+func main() {
+    fmt.Println("Start")
+    fmt.Println(riskyDivision(10, 0))
+    fmt.Println("End") // never reached
+}
+
+```
+```
+Start
+panic: division by zero
+```
+
+## Working with files
+Like other programming languages you can only work with text files. 
+
+We use **os** module to work with files
+
+1. Creating a file and writing to it.
+```go
+file, err := os.Create("./sample.txt")
+if err != nil {
+    panic(err)
+}
+length, err := io.WriteString(file, "Hello, my name is sreehari")
+defer file.Close()
+```
+2. Reading files
+```go
+fmt.Println("Reading from a file")
+bytes, err := os.ReadFile("./sample.txt")
+if err != nil {
+    panic(err)
+}
+fmt.Println("The content of the file is ", string(bytes))
+
+```
+
+## Handling Web Requests.
+We make use of net/http and io to handle web requests.
+```go
+res, err := http.Get("https://jsonplaceholder.typicode.com/posts")
+if err != nil {
+    panic(err)
+}
+defer res.Body.Close()
+databytes, err := io.ReadAll(res.Body)
+if err != nil {
+    panic(err)
+}
+fmt.Println(string(databytes))
+```
+## Working with URL's
+We use ```url``` module for this.
+```go
+const myUrl string = "https://www.quickzy.ai/api/v1/posts?page=1&sort=desc"
+// convert a string into URL
+ulrString, err := url.Parse(urlString)
+// to get query params from a URL
+qparams := urlString.Query()
+```
+To contstruct a url from chunks
+```go
+partsOfURL := &url.URL{
+    Scheme: "https",
+    Host: "isai.dev",
+    path: "/learn"
+}
+ur := partsOfURL.string()
+```
+There are any methods in URL. **CHECK IT OUT**.
+
+## Working with JSON 
+
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+type Course struct {
+	Name     string   //`json:"name"`
+	Price    int      //`json:"price"`
+	Password string   //`json:"password"`
+	Tags     []string //`json:"tags"`
+}
+
+
+func EncodeJSON() {
+	courses := []Course{
+		{"React", 300, "react@password", []string{"web", "frontend"}},
+		{"Node.js", 300, "node@password", []string{"web", "backend"}},
+		{"Docker", 300, "docker@password", nil},
+	}
+	finalJSON, err := json.Marshal(courses)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%s\n", finalJSON)
+}
+
+func main() {
+	EncodeJSON()
+}
+
+``` 
+When you create a struct in Go, like this:
+```go
+type Course struct {
+	name     string
+	price    int
+	password string
+	tags     []string
+}
+```
+All the fields (name, price, etc.) start with small letters. In Go, that means these fields are private — they can only be used inside the same file or package.
+
+The encoding/json package can only see public (exported) fields — those that start with a capital letter.
+So when you try to convert your struct to JSON, it can’t see the lowercase fields, and the result becomes:
+```
+[{}, {}, {}]
+```
+Also to avoid a certain field to not show when consuming API
+```go
+type Course struct {
+	name     string
+	price    int 
+	password string `json:"-"`
+	tags     []string `json:"tags,omitempty"` //if the value is null then don't show the field.
+}
+// this ensures that password field does not come in the result
+```
+#### In short:
+
+```lowercase → private → not visible to JSON```
+
+```capitalized → public → visible to JSON```
