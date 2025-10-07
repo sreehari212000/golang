@@ -320,3 +320,29 @@ type Course struct {
 ```lowercase → private → not visible to JSON```
 
 ```capitalized → public → visible to JSON```
+
+## Consuming JSON data.
+```go
+func decodeJSON() {
+	jsonData := []byte(`
+	{
+		"name": "React.js",
+		"price": 200,
+		"tags": ["web", "frontend", "js"]
+	}
+	`)
+	js := json.Valid(jsonData)
+	var lc Course //the struct created before
+	if js {
+		fmt.Println("VALID JSON")
+		json.Unmarshal(jsonData, &lc) 
+		fmt.Println(lc)
+	} else {
+		fmt.Println("INVALID JSON")
+	}
+} 
+```
+```json.Marshal()``` is used to conver Go variable into JSON data.
+
+
+```json.Unmarshal()``` is used to convert JSON data back into a Go variable (like a struct, map, or slice).
