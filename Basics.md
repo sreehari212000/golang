@@ -298,7 +298,7 @@ type Course struct {
 	tags     []string
 }
 ```
-All the fields (name, price, etc.) start with small letters. In Go, that means these fields are private — they can only be used inside the same file or package.
+In Go, any identifier that starts with an uppercase letter is exported and accessible from other packages, while those that start with a lowercase letter are unexported and only accessible within the same package.
 
 The encoding/json package can only see public (exported) fields — those that start with a capital letter.
 So when you try to convert your struct to JSON, it can’t see the lowercase fields, and the result becomes:
