@@ -1,3 +1,8 @@
 go.mod
 sample.go
 sample
+database/
+utils/
+utils.go
+go.sum
+sample.txt

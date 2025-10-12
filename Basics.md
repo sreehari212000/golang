@@ -1,11 +1,5 @@
 # INTRODUCTION TO GO
 
-## Before you start writing code in go the first thing you have to do is
-```
-go mod init
-```
-this is almost similar to npm init
-
 ## Basic syntax
 ```go
 package main
@@ -75,8 +69,72 @@ func main() {
     name, _ := reader.ReadString('\n') // reads until Enter is pressed
     fmt.Println("Your name is:", name)
 }
+```
+## Pointers
+A pointer is a variable that stores the memory address of another variable.
+
+```*int``` → pointer to int.
+
+```*string``` → pointer to string.
+
+```*MyStruct``` → pointer to struct.
+
+```*[]int``` → pointer to a slice (rarely needed, slices already reference underlying array).
+
+```*[string]int``` → pointer to a map (also rarely needed, maps are reference types too).
+
+### Pointer Receivers (Methods)
+```go
+type Counter struct {
+    value int
+}
+
+// Value receiver (copy)
+func (c Counter) IncrementByValue() {
+    c.value++
+}
+
+// Pointer receiver (no copy)
+func (c *Counter) IncrementByPointer() {
+    c.value++
+}
+
+func main() {
+    c := Counter{value: 0}
+
+    c.IncrementByValue()
+    fmt.Println(c.value) // 0 ❌ copy was modified
+
+    c.IncrementByPointer()
+    fmt.Println(c.value) // 1 ✅ original was modified
+}
 
 ```
+👉 Rule of thumb:
+
+- Use pointer receivers if:
+
+	- You want to modify the struct
+
+	- The struct is large and you want to avoid copying
+
+- Use value receivers if:
+
+	- The struct is small and you don’t need to modify it
+
+**A pointer can be nil if it doesn’t point to anything.**
+```go
+var p *int
+fmt.Println(p) // <nil>
+```
+### ```new() is another way to create pointer in go```
+```go
+p := new(int)
+*p = 10
+fmt.Println(*p) // 10
+//new(T) allocates zeroed storage for a new item of type T and returns its address.
+```
+
 ## Structs
 In golang there is no inheritence, ie no super or parent 
 To create a struct 
@@ -346,3 +404,24 @@ func decodeJSON() {
 
 
 ```json.Unmarshal()``` is used to convert JSON data back into a Go variable (like a struct, map, or slice).
+<<<<<<< HEAD
+=======
+
+## Fetching from API
+```go
+func getDataFromAPI(URL string) {
+	response, err := http.Get(URL)
+	if err != nil {
+		fmt.Println("ERRRO FETCHING DATA!")
+		panic(err)
+	}
+	defer response.Body.Close()
+	data, err := io.ReadAll(response.Body)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%T", data)
+
+}
+```
+>>>>>>> 6cd3267 (initial commit)
